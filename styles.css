@@ -5,6 +5,10 @@
 body {
   background-color: #0F0E15;
   color: white;
+  font-family: 'Inter';
+  margin: 0 auto;
+  overflow-x: hidden;
+  max-width: 1366px;
 }
 
 header {
@@ -63,13 +67,14 @@ a:hover {
 
 /* DROPDOWN MENU */
 .dropdown-menu {
+  display: none;
   position: absolute;
   right: 2rem;
   top: 60px;
   width: 300px;
   height: 0;
   background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(15px);
+  backdrop-filter: blur(1px);
   border-radius: 10px;
   overflow: hidden;
 }
@@ -101,11 +106,151 @@ a:hover {
   .dropdown-menu {
    display: block; 
   }
+
+  /* .welcome-content h1 {
+    width: 50%;
+  } */
 }
 
 @media (max-width: 600px) {
+  header {
+    margin: 10px 5px;
+  }
   .dropdown-menu {
     left: 2rem;
     width: unset;
   }
+  .trusted-by {
+    flex-direction: column;
+  }
+}
+
+#welcome {
+  width: 100%;
+  margin-top: 150px;
+  margin-bottom: 200px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.welcome-content {
+  width: 40%;
+}
+
+.welcome-content {
+  margin-left: 30px;
+}
+
+.welcome-content h1 {
+  font-size: 40px;
+  font-weight: bold;
+}
+
+.welcome-image {
+  margin-top: 150px;
+}
+
+.welcome-image * {
+  position: relative;
+  opacity: 0.5;
+}
+
+.welcome-image img.img1 {
+  top: 40px;
+  right: 70px;
+}
+
+.welcome-image img.img2 {
+  top: 20px;
+  right: 60px;
+  width: 192px;
+  height: 192px;
+}
+
+.welcome-image img.img3 {
+  top: 5px;
+  right: 50px;
+  width: 256px;
+  height: 256px;
+}
+
+@media (max-width: 992px) {
+  #welcome {
+    flex-direction: column;
+  }
+
+  .welcome-content {
+    width: unset;
+  }
+
+  .welcome-image {
+    margin-top: 0;
+  }
+
+  .welcome-image * {
+    display: none;
+    position: unset;
+  }
+  .welcome-image img.img3 {
+    display: block;
+    margin: 100px auto;
+  }
+}
+
+.blur-circle {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  background: #352F6D;
+  opacity: 0.5;
+  filter: blur(140px); 
+}
+
+.circle-1 {
+  top: 650px;
+  left: -220px;
+}
+
+.circle-2 {
+  top: 50px;
+  right: -220px;
+}
+/* Ellipse 1 */
+
+#about-us {
+  width: 60%;
+  margin: 0 auto;
+  text-align: center;
+  margin-bottom: 100px;
+}
+
+#about-us p {
+  text-align: left;
+}
+
+#about-us p:last-child {
+  text-align: center;
+}
+
+iframe {
+  border: none;
+  width: 60%;
+  height: 40dvh;
+}
+.trusted-by {
+  display: flex;
+  width: 70%;
+  margin: 10px auto;
+  justify-content: space-around;
+  align-items: center;
+  flex-direction: row;
+}
+
+/* Frame 5 */
+
+.bottom-line {
+  margin-top: 50px;
+  width: 100%;
+  height: 8px;
+  background: linear-gradient(90.97deg, #201563 49.17%, rgba(0, 0, 0, 0.25) 74.93%);
 }
