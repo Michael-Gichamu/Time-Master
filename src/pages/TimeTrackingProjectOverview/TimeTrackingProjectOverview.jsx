@@ -1,8 +1,12 @@
+import ProjectOverview from "./sections/ProjectOverview"
 import Welcome from "./sections/Welcome"
 
 const TimeTrackingProjectOverview = () => {
   return (
-    < Welcome />
+    <>
+      <Welcome />
+      <ProjectOverview />
+    </>
   )
 }
 
