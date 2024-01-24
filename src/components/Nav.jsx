@@ -10,8 +10,9 @@ const Nav = () => {
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
   }
+
   return (
-    <header>
+    <header className="fixed top-0 w-full">
       <nav >
         <div className="flex justify-between items-center p-2 md:hidden">
           <div className="font-medium">{logo}</div>
@@ -20,9 +21,9 @@ const Nav = () => {
           </button>
         </div>
         {isDropdownOpen && (
-          <ul className='bg-[#191B1B] text-center rounded-md mx-2 py-2 mb-3 md:hidden'>
+          <ul className='bg-[rgba(25,27,27,0.4)] backdrop-blur-sm text-center rounded-md mx-2 py-2 md:hidden' >
             {NavLinks.map((item, index) => (
-            <li key={index} className="py-1 hover:bg-[#242A2F]">
+            <li key={index} className="py-1 rounded-sm hover:bg-[rgb(36,42,47,0.3)]">
               <a href={item.href}>{item.label}</a>
             </li>
           ))}
@@ -30,7 +31,7 @@ const Nav = () => {
         )}
       </nav>
       <nav className="hidden md:flex m-2 p-2 justify-between items-center rounded-lg">
-        <div className="font-bold">TIMECRAFT</div>
+        <div className="font-bold">{logo}</div>
         <ul className='flex space-x-8 basis-1/2 justify-between'>
           {NavLinks.map((item, index) => (
               <li key={index}>
