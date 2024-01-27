@@ -7,6 +7,8 @@ export default function App() {
     <main>
       <Nav />
       <TimeTrackingProjectOverview />
+      <div className="blur-circle circle-1"></div>
+      <div className="blur-circle circle-2"></div>
     </main>
   )
 }
