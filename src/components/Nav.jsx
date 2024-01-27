@@ -30,7 +30,7 @@ const Nav = () => {
           </ul>
         )}
       </nav>
-      <nav className="hidden md:flex m-2 p-2 justify-between items-center rounded-lg">
+      <nav className="hidden md:flex mx-2 p-2 justify-between items-center rounded-lg">
         <div className="font-bold">{logo}</div>
         <ul className='flex basis-1/2 justify-between'>
           {NavLinks.map((item, index) => (
