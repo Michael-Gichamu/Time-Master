@@ -12,7 +12,7 @@ const Nav = () => {
   }
 
   return (
-    <header className="fixed top-0 w-full">
+    <header className="fixed top-0 w-full backdrop-blur-lg">
       <nav >
         <div className="flex justify-between items-center p-2 md:hidden">
           <div className="font-medium">{logo}</div>
@@ -23,7 +23,7 @@ const Nav = () => {
         {isDropdownOpen && (
           <ul className='bg-[rgba(25,27,27,0.4)] backdrop-blur-sm text-center rounded-md mx-2 py-2 md:hidden' >
             {NavLinks.map((item, index) => (
-            <li key={index} className="py-1 rounded-sm hover:bg-[rgb(36,42,47,0.3)]">
+            <li key={index} className="py-1 rounded-sm hover:bg-[rgb(36,42,47,0.2)]">
               <a href={item.href}>{item.label}</a>
             </li>
           ))}
@@ -36,7 +36,7 @@ const Nav = () => {
           {NavLinks.map((item, index) => (
               <li key={index}>
                 {item.label == 'Profile' ? 
-                ( <a href='profile' className="fontSize"><FontAwesomeIcon icon={ faUser} className="text-xl text-[#545454]"/></a> ) : ( <a href={item.href}>{item.label}</a> )}
+                ( <a href='profile' className="fontSize"><FontAwesomeIcon icon={ faUser} className="text-xl text-[#545454]"/></a> ) : ( <a href={item.href} className="hover:text-[#A7426D]">{item.label}</a> )}
               </li>
           ))}
         </ul>
