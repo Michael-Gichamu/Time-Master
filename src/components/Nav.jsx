@@ -32,11 +32,11 @@ const Nav = () => {
       </nav>
       <nav className="hidden md:flex m-2 p-2 justify-between items-center rounded-lg">
         <div className="font-bold">{logo}</div>
-        <ul className='flex space-x-8 basis-1/2 justify-between'>
+        <ul className='flex basis-1/2 justify-between'>
           {NavLinks.map((item, index) => (
-              <li key={index}>
+              <li key={index} className="hover:text-[#A7426D]">
                 {item.label == 'Profile' ? 
-                ( <a href='profile' className="fontSize"><FontAwesomeIcon icon={ faUser} className="text-xl text-[#545454]"/></a> ) : ( <a href={item.href} className="hover:text-[#A7426D]">{item.label}</a> )}
+                ( <a href='profile' className="fontSize"><FontAwesomeIcon icon={ faUser} className="text-xl text-[#545454]"/></a> ) : ( <a href={item.href}>{item.label}</a> )}
               </li>
           ))}
         </ul>
