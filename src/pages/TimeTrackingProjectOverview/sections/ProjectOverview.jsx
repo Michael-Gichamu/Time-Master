@@ -1,6 +1,44 @@
-import Dashboard from "../../../components/Dashboard"
+import React, { useState, useEffect } from "react";
+import Dashboard from "../../../components/Dashboard";
+import { Projects } from "../../../constants";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import { Doughnut } from "react-chartjs-2";
+import { faWheatAwnCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 
 const ProjectOverview = () => {
+  ChartJS.register(ArcElement, Tooltip, Legend);
+
+  const [cumulativeCompletionStatus, setCumulativeCompletionStatus] = useState(0);
+
+  useEffect(() => {
+    // Calculate cumulativeCompletionStatus when the component mounts or Projects change
+    const totalCompletion = Projects.reduce((acc, project) => acc + project.completionStatus, 0);
+    setCumulativeCompletionStatus(totalCompletion / 2);
+  }, [Projects]);
+
+  const doughnutData = {
+    labels: ["Completed", "Remaining"],
+    datasets: [
+      {
+        data: [cumulativeCompletionStatus, 100 - cumulativeCompletionStatus],
+        backgroundColor: ["#97C43B", "#1E6575"],
+        borderColor: "#1E6575",
+      },
+    ],
+  };
+
+  const doughnutOptions = {
+    cutout: "80%", // Adjust the size of the doughnut hole,
+    radius: '80%',
+    layout: {
+      padding: {
+        top: 20,
+        left: 10,
+        right: 10,
+      },
+    },
+  }
+
   return (
     <div className="text-center my-14">
       <h1 className="font-bold">Project Overview</h1>
@@ -9,15 +47,23 @@ const ProjectOverview = () => {
           <div>
             <Dashboard />
           </div>
-          <div className="flex justify-between gap-2 pl-2 p-8">
-            <div className="bg-[#19181B] basis-2/3"><p>Projects</p></div>
-            <div className="bg-[#19181B] basis-1/3"><p>Completed</p></div>
+          <div className="flex justify-between gap-2 ml-2 pl-2 py-4 px-7">
+            <div className="bg-[#19181B] basis-2/3">
+              <p>Projects</p>
+              <p>{Projects.length}</p>
+            </div>
+            <div className="bg-[#19181B] px-2 py-4">
+              <p className="pb-4 font-bold">Completed</p>
+              <div>
+                <Doughnut data={doughnutData}  options={doughnutOptions}/>
+                <p className="relative bottom-44 mx-auto font-extrabold text-5xl text-[#97C43B] ">{cumulativeCompletionStatus.toFixed(1)}%</p>
+              </div>
+            </div>
           </div>
-          {/* <p className="ml-2">"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."</p> */}
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ProjectOverview
+export default ProjectOverview;
