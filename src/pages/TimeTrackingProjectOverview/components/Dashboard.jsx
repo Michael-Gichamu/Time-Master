@@ -23,10 +23,10 @@ const Dashboard = () => {
     <div className='md:flex justify-between items-center md:*:my-2 md:mx-4 md:mr-5'>
       <p className=''>Dashboard</p>
       <div className='flex justify-center items-center gap-2'>
-        <div className="flex items-center bg-[#1f1f1f] font-bold *:py-1 *:h-7 *:px-2 *:text-sm border-[#1F1F1F] rounded-md">
-          <div className='hover:bg-[#9DCBEF] hover:text-black rounded-l-md'>Month</div>
-          <div className='hover:bg-[#9DCBEF] hover:text-black'>Week</div>
-          <div className='hover:bg-[#9DCBEF] hover:text-black rounded-r-md'>Day</div>
+        <div className="flex items-center bg-[#1f1f1f] font-bold *:py-1 *:h-7 *:px-2 *:text-sm custom-darkgray rounded-md">
+          <div className='hover:custom-lightblue hover:text-black rounded-l-md'>Month</div>
+          <div className='hover:custom-lightblue hover:text-black'>Week</div>
+          <div className='hover:custom-lightblue hover:text-black rounded-r-md'>Day</div>
         </div>
         <div className='flex justify-between items-center'>
           <button className='bg-[#101010] px-2 h-7 font-bold rounded-l-md border-[#1F1F1F] border'>{'<'}</button>
@@ -44,7 +44,7 @@ const Dashboard = () => {
       <div className='flex items-center justify-center'>
         <p>Activity Tracking</p>
         <button className='mt-1.5' onClick={handleToggle}>
-          <FontAwesomeIcon icon={isToggled ? faToggleOn : faToggleOff} className="mx-2 text-xl text-[#9DCBEF]"/>
+          <FontAwesomeIcon icon={isToggled ? faToggleOn : faToggleOff} className="mx-2 text-xl text-[custom-lightblue]"/>
         </button>
       </div>
     </div>

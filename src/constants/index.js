@@ -12,5 +12,5 @@ export const Users = {
 
 export const Projects = [
   { title: 'TimeCraft Design', hoursTaken: '50', completionStatus: 75},
-  { title: 'CV Learning', hoursTaken: '10', completionStatus: 100}
+  { title: 'CV Learning', hoursTaken: '10', completionStatus: 60}
 ]

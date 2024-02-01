@@ -19,6 +19,15 @@
   .section-line {
     border-left: 2px solid #1F1F1F;
   }
+  .custom-darkgray {
+    background-color: #1F1F1F;
+  }
+  .custom-black {
+    background-color: #101010;
+  }
+  .custom-lightblue {
+    background-color: #9DCBEF;
+  }
 }
 
 .custom-datepicker-input {

@@ -24,7 +24,7 @@ const DoughnutChart = ( { cumulativeCompletionStatus }) => {
   }, []);
 
   ChartJS.register(ArcElement, Tooltip, Legend);
-  console.log(cumulativeCompletionStatus + 'from doughnut chart')
+  // console.log(cumulativeCompletionStatus + 'from doughnut chart')
   if (cumulativeCompletionStatus <= 0) {
     return null;
   }
@@ -73,6 +73,7 @@ const DoughnutChart = ( { cumulativeCompletionStatus }) => {
 
   return (
     <Doughnut
+      key={windowSize.width}
       data={doughnutData}
       options={doughnutOptions}
       plugins={plugins}
