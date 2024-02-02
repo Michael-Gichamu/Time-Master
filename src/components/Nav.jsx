@@ -12,7 +12,7 @@ const Nav = () => {
   }
 
   return (
-    <header className="fixed top-0 w-full backdrop-blur-lg z-10">
+    <header className="fixed mx-auto left-0 right-0 xl:w-[1366px] top-0 w-full backdrop-blur-lg z-50">
       <nav >
         <div className="flex justify-between items-center p-2 md:hidden">
           <div className="font-medium">{logo}</div>
