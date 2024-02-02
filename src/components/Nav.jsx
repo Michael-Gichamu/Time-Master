@@ -23,7 +23,7 @@ const Nav = () => {
         {isDropdownOpen && (
           <ul className='bg-[rgba(25,27,27,0.4)] backdrop-blur-sm text-center rounded-md mx-2 py-2 md:hidden' >
             {NavLinks.map((item, index) => (
-            <li key={index} className="py-1 rounded-sm hover:bg-[rgb(36,42,47,0.2)]">
+            <li key={index} className="py-1 rounded-sm hover:bg-[rgba(36,42,47,0.2)]">
               <a href={item.href}>{item.label}</a>
             </li>
           ))}
