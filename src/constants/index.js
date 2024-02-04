@@ -14,3 +14,5 @@ export const Projects = [
   { title: 'TimeCraft Design', hoursTaken: '50', completionStatus: 75},
   { title: 'CV Learning', hoursTaken: '10', completionStatus: 60}
 ]
+
+export const workedHours = [4, 8, 6, 11, 14, 9, 10];
