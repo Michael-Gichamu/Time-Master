@@ -14,7 +14,7 @@ const TimeTrackingChart = ({ data }) => {
     gradient.addColorStop(1, 'rgba(77, 109, 139, 0.02)'); // Transparent at the bottom
     return gradient;
   };
-
+  
   const chartData = {
     labels: labels.map((date) => format(date, 'EEE d MMM')), // Format the date as needed
     datasets: [
