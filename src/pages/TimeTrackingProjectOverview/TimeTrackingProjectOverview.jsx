@@ -1,5 +1,5 @@
 import ProjectOverview from "./sections/ProjectOverview"
-import TimeTracking from "./sections/TimeTracking"
+import TimeTrackingOverview from "./sections/TimeTrackingOverview"
 import Welcome from "./sections/Welcome"
 
 const TimeTrackingProjectOverview = () => {
@@ -7,7 +7,7 @@ const TimeTrackingProjectOverview = () => {
     <>
       <Welcome />
       <ProjectOverview />
-      <TimeTracking />
+      <TimeTrackingOverview />
     </>
   )
 }
