@@ -19,6 +19,27 @@
   .section-line {
     border-left: 2px solid #1F1F1F;
   }
+  .custom-darkgray {
+    background-color: #1F1F1F;
+  }
+  .custom-gray {
+    background-color: #19181B;
+  }
+  .custom-green {
+    background-color: #97C43B;
+  }
+  .border-darkgray {
+    border-color: #1F1F1F;
+  }
+  .custom-blue {
+    background-color: #1E6575;
+  }
+  .custom-black {
+    background-color: #101010;
+  }
+  .custom-lightblue {
+    background-color: #9DCBEF;
+  }
 }
 
 .custom-datepicker-input {

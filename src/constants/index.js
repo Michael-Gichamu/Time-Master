@@ -5,6 +5,12 @@ export const NavLinks = [
   // { href: '#TimeTrackingProjectOverview', label: 'TimeTracking & ProjectOverview'},
   { href: '#Profile', label: 'Profile'}
 ]
+
 export const Users = {
   name: 'Michael Gichamu'
 }
+
+export const Projects = [
+  { title: 'TimeCraft Design', hoursTaken: '50', completionStatus: 75},
+  { title: 'CV Learning', hoursTaken: '10', completionStatus: 60}
+]
