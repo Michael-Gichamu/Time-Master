@@ -19,13 +19,13 @@ const TimeTrackingOverview = () => {
           <div>
             <Dashboard />
           </div>
-          <div className='py-4 pl-2 flex'>
+          <div className='pt-4 pb-6 pl-2 flex'>
             <TimeTracking />
             <Focus cumulativeWeeklyFocusedHours={cumulativeWeeklyFocusedHours} cumulativeWeeklyCollaborativeHours={cumulativeWeeklyCollaborativeHours} cumulativeWeeklyDistractedHours={cumulativeWeeklyDistractedHours}/>
           </div>
-          <div className='pb-2 pl-2 flex'>
+          <div className='pb-5 pl-2 flex'>
             <AppWebUsage />
-            <DistractionWebUsage  className='absolute top-20'/>
+            <DistractionWebUsage  className=''/>
           </div>
         </div>
       </div>
