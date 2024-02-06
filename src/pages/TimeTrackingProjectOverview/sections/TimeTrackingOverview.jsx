@@ -25,7 +25,7 @@ const TimeTrackingOverview = () => {
           </div>
           <div className='pb-2 pl-2 flex'>
             <AppWebUsage />
-            <DistractionWebUsage />
+            <DistractionWebUsage  className='absolute top-20'/>
           </div>
         </div>
       </div>
