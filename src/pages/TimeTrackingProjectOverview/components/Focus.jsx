@@ -9,7 +9,7 @@ const Focus = ({ cumulativeWeeklyFocusedHours, cumulativeWeeklyDistractedHours, 
   }
   
   return (
-    <div className='custom-gray w-5/12 ml-4  mr-7 py-2.5 pb-4 h-3/4 *:mt-2 relative'>
+    <div className='custom-gray w-5/12 ml-4 mr-7 py-2.5 pb-4 h-3/4 *:mt-2 relative'>
       <p className='ml-4'>Focus</p>
       <div className='ml-8 flex items-center justify-between gap-1'>
         <div className='w-5/12'>
