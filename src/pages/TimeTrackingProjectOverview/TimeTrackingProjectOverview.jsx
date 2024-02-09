@@ -9,7 +9,7 @@ const TimeTrackingProjectOverview = () => {
       <Welcome />
       <ProjectOverview />
       <TimeTrackingOverview />
-      <MaximizeProductivity />
+      {/* <MaximizeProductivity /> to be implemented*/} 
     </>
   )
 }
