@@ -11,6 +11,7 @@ export default function App() {
       <Footer />
       <div className="blur-circle circle-1"></div>
       <div className="blur-circle circle-2"></div>
+      <div className="blur-circle circle-3"></div>
     </main>
   )
 }
