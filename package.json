@@ -22,6 +22,10 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@iconify-json/devicon": "^1.1.35",
+    "@iconify-json/logos": "^1.1.42",
+    "@iconify-json/skill-icons": "^1.1.7",
+    "@iconify/tailwind": "^0.1.4",
     "@types/react": "^18.2.43",
     "@types/react-dom": "^18.2.17",
     "@vitejs/plugin-react": "^4.2.1",
