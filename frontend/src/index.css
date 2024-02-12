@@ -1,0 +1,76 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+@layer components {
+  .section-container {
+    margin: 15px auto;
+    width: 80%;
+    background-color: #101010;
+    padding-left: 4%;
+  }
+  .section-line {
+    border-left: 2px solid #1F1F1F;
+  }
+  .custom-darkgray {
+    background-color: #1F1F1F;
+  }
+  .custom-gray {
+    background-color: #19181B;
+  }
+  .custom-green {
+    background-color: #97C43B;
+  }
+  .border-darkgray {
+    border-color: #1F1F1F;
+  }
+  .custom-blue {
+    background-color: #1E6575;
+  }
+  .custom-black {
+    background-color: #101010;
+  }
+  .custom-lightblue {
+    background-color: #9DCBEF;
+  }
+}
+
+.custom-datepicker-input {
+  color: black;
+}
+body {
+  margin: 0 auto;
+  overflow-x: hidden;
+  max-width: 1366px;
+}
+
+.blur-circle {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  background: #352F6D;
+  z-index: -10;
+  filter: blur(140px);
+}
+
+.circle-1 {
+  top: 50px;
+  right: -220px;
+}
+
+.circle-2 {
+  top: 650px;
+  left: -220px;
+}
+
+.circle-3 {
+  top: 1200px;
+  right: -220px;
+}
