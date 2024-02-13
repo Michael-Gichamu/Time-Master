@@ -6,6 +6,10 @@ export const NavLinks = [
   { href: '#Profile', label: 'Profile'}
 ]
 
+export const FooterLinks = [
+  { href: '#Contact', label: 'Contact' },
+  { href: '#Feedback', label: 'Feedback' }
+]
 export const Users = {
   name: 'Michael Gichamu'
 }
