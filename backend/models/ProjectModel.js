@@ -16,9 +16,17 @@ const ProjectSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now
-  }
+  },
+  completionStatus: {
+    type: Number,
+    required: true,
+  },
+  regularStart: {
+    type: Date,
+  },
+  regularEnd: {
+    type: Date,
+  },
 });
 
-const Project = mongoose.model('Project', ProjectSchema);
-
-module.exports = Project;
+export const Project = mongoose.model('Project', ProjectSchema);
