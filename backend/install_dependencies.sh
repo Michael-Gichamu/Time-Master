@@ -8,7 +8,7 @@ npm init -y
 npm i express nodemon
 
 # Install mongoose, express and cors
-npm install mongoose cors
+npm install mongodb mongoose cors
 
 # To Load environment variables
 npm install dotenv
