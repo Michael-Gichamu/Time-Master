@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const ProjectOverviewSchema = new mongoose.Schema({
+const ProjectSchema = new mongoose.Schema({
   title: {
     type: String,
     required: true
@@ -19,6 +19,6 @@ const ProjectOverviewSchema = new mongoose.Schema({
   }
 });
 
-const ProjectOverview = mongoose.model('ProjectOverview', ProjectOverviewSchema);
+const Project = mongoose.model('Project', ProjectSchema);
 
-module.exports = ProjectOverview;
+module.exports = Project;
