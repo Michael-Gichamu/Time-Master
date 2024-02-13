@@ -17,6 +17,10 @@ const ProjectSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
+  completionStatus: {
+    type: Number,
+    required: true,
+  },
   regularStart: {
     type: Date,
   },
