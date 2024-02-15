@@ -1,13 +1,12 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const ProjectSchema = new mongoose.Schema({
   title: {
     type: String,
-    required: true
+    required: true,
   },
   hoursTaken: {
     type: String,
-    required: true
   },
   completionStatus: {
     type: Number,
@@ -15,16 +14,19 @@ const ProjectSchema = new mongoose.Schema({
   },
   createdAt: {
     type: Date,
-    default: Date.now
-  },
-  completionStatus: {
-    type: Number,
-    required: true,
+    default: Date.now,
   },
   regularStart: {
     type: Date,
   },
   regularEnd: {
+    type: Date,
+  },
+  isFinished: {
+    type: Boolean,
+    default: false,
+  },
+  finishedAt: {
     type: Date,
   },
 });
