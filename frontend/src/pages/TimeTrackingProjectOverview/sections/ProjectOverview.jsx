@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Dashboard from "../components/Dashboard";
-import { getProjects, startProject, endProject, createProject, updateProject, deleteProject } from '../../../api';
+import { getProjects, createProject, updateProject, deleteProject, startProject, pauseProject, finishProject} from '../../../api';
 // import { faWheatAwnCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 import DoughnutChart from "../components/DoughnutChart";
 import ProjectsList from "../components/ProjectsList";
@@ -13,7 +13,8 @@ const ProjectOverview = () => {
   const [projects, setProjects] = useState([]);
   const [newProjectTitle, setNewProjectTitle] = useState('');
 
-   useEffect(() => {
+  
+  useEffect(() => {
     const fetchData = async () => {
       const projectsData = await getProjects();
       setProjects(projectsData);
@@ -23,24 +24,6 @@ const ProjectOverview = () => {
 
     fetchData();
   }, []);
-
-  const handleStartClick = async (projectId) => {
-    setActiveProject(projectId);
-    await startProject(projectId);
-    // Refresh projects data after starting
-    const projectsData = await getProjects();
-    setProjects(projectsData);
-  };
-
-  const handleStopClick = async () => {
-    if (activeProject) {
-      await endProject(activeProject._id);
-      // Refresh projects data after stopping
-      const projectsData = await getProjects();
-      setProjects(projectsData);
-      setActiveProject(null);
-    }
-  };
 
   const handleCreateProject = async () => {
     if (newProjectTitle) {
@@ -66,6 +49,30 @@ const ProjectOverview = () => {
     setProjects(projectsData);
   };
 
+  const handleStartClick = async (projectId) => {
+    setActiveProject(projectId);
+    await startProject(projectId);
+    // Refresh projects data after starting
+    const projectsData = await getProjects();
+    setProjects(projectsData);
+  };
+
+  const handlePauseClick = async (projectId) => {
+    await pauseProject(projectId);
+    // Refresh projects data after pausing
+    const projectsData = await getProjects();
+    setProjects(projectsData);
+  };
+
+  const handleStopClick = async () => {
+    if (activeProject) {
+      await finishProject(activeProject._id);
+      // Refresh projects data after stopping
+      const projectsData = await getProjects();
+      setProjects(projectsData);
+      setActiveProject(null);
+    }
+  };
 
   return (
     <div className="my-14">
@@ -84,11 +91,13 @@ const ProjectOverview = () => {
               <div className="h-5/6 overflow-auto scrollbar-thin scrollbar-thumb-[#1F1F1F] scrollbar-track-[#101010] p-2">
                 <ProjectsList
                     projects={projects}
-                    onStartClick={handleStartClick}
-                    onStopClick={handleStopClick}
+                    onCreateProject={handleCreateProject}
                     onUpdateClick={handleUpdateProject}
                     onDeleteClick={handleDeleteProject}
-                  />
+                    onStartClick={handleStartClick}
+                    onPauseClick={handlePauseClick}
+                    onStopClick={handleStopClick}
+                  />  
               </div>
             </div>
             <div className="custom-gray px-2 py-4 my-2 md:my-0">
