@@ -2,6 +2,19 @@ import express from 'express';
 import { Project } from '../models/ProjectModel.js';
 const router = express.Router();
 
+// Get all archived projects & route order precedence
+router.get('/archived', async (req, res) => {
+  try {
+    const archivedProjects = await Project.find({ isFinished: true });
+    return res.status(200).json({
+      count: archivedProjects.length,
+      data: archivedProjects,
+    });
+  } catch (error) {
+    return res.status(500).send({ message: error.message });
+  }
+});
+
 // Get all projects
 router.get('/', async (req, res) => {
   try {
@@ -111,29 +124,23 @@ router.put('/:id/pause', async (req, res) => {
     }
 
     if (project.regularStart) {
-      console.log('Regular Start:', project.regularStart);
-
       // Convert regularStart string to a Date object
       const regularStartDate = new Date(project.regularStart);
 
       // Calculate hours between regularStart and current time
       const currentTime = new Date();
-      console.log('Current Time:', currentTime);
 
       const elapsedTimeInMilliseconds = currentTime.getTime() - regularStartDate.getTime();
       const elapsedTimeInHours = elapsedTimeInMilliseconds / (1000 * 60 * 60);
-      console.log('Elapsed time in hours:', elapsedTimeInHours);
 
       // Save the original hoursTaken
-      const currentHoursTaken = project.hoursTaken;
+      let currentHoursTaken = project.hoursTaken;
 
       // Parse hoursTaken to a float, add elapsed time, and convert back to a string
       const updatedHoursTaken = (parseFloat(project.hoursTaken) + elapsedTimeInHours).toString();
-      console.log('Original hoursTaken:', project.hoursTaken);
-      console.log('Updated hoursTaken:', updatedHoursTaken);
 
       // Update project data
-      project.hoursTaken = updatedHoursTaken;
+      currentHoursTaken = project.hoursTaken = updatedHoursTaken;
       project.regularStart = null;
       project.regularEnd = null;
 
@@ -142,19 +149,19 @@ router.put('/:id/pause', async (req, res) => {
 
       // Include the elapsed time in seconds and current hoursTaken in the response
       const elapsedTimeInSeconds = Math.round(elapsedTimeInMilliseconds / 1000);
-      // console.log(`${currentHoursTaken * 3600} seconds from hoursTaken: ${currentHoursTaken} hours`);
       const currentHoursTakenInSeconds = Math.round(currentHoursTaken * 3600);
-      const currentTimeTaken = '';
+      let currentTimeTaken = '';
+
       if (currentHoursTakenInSeconds < 60) {
-        currentTimeTaken = currentHoursTakenInSeconds + ' sec';
+        currentTimeTaken = (currentHoursTaken * 3600).toFixed(2) + ' sec';
       } else if (currentHoursTakenInSeconds > 60) {
-        currentTimeTaken = Math.round(currentHoursTakenInSeconds / 60) + ' min';
+        currentTimeTaken = (currentHoursTaken * 60).toFixed(2) + ' min';
       } else if (currentHoursTakenInSeconds > 3600) {
-        currentTimeTaken = Math.round(currentHoursTakenInSeconds / 3600) + ' hrs';
+        currentTimeTaken = (currentHoursTaken / 60).toFixed(2) + ' hrs';
       }
       return res.status(200).json({
         project,
-        elapsedTimeInSeconds: `hoursTaken since recent start: ${elapsedTimeInSeconds} seconds`,
+        elapsedTimeInSeconds: `${elapsedTimeInSeconds} sec`,
         currentHoursTaken: currentTimeTaken
       });
     }
@@ -169,7 +176,17 @@ router.put('/:id/pause', async (req, res) => {
 // Finish a project and archive it
 router.put('/:id/finish', async (req, res) => {
   try {
-    const project = await Project.findByIdAndUpdate(
+    const project = await Project.findById(req.params.id);
+
+    if (!project) {
+      return res.status(404).json({ message: 'Project not found' });
+    }
+
+    if (project.isFinished) {
+      return res.status(200).json({ message: 'Project already finished' });
+    }
+    
+    const updatedProject = await Project.findByIdAndUpdate(
       req.params.id,
       {
         finishedAt: new Date(),
@@ -178,24 +195,7 @@ router.put('/:id/finish', async (req, res) => {
       { new: true }
     );
 
-    if (!project) {
-      return res.status(404).json({ message: 'Project not found' });
-    }
-
-    return res.status(200).json(project);
-  } catch (error) {
-    return res.status(500).send({ message: error.message });
-  }
-});
-
-// Get all archived projects
-router.get('/archived', async (req, res) => {
-  try {
-    const archivedProjects = await Project.find({ isFinished: true });
-    return res.status(200).json({
-      count: archivedProjects.length,
-      data: archivedProjects,
-    });
+    return res.status(200).json({updatedProject, message: 'Project finished and archived'});
   } catch (error) {
     return res.status(500).send({ message: error.message });
   }
