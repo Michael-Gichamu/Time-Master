@@ -1,5 +1,6 @@
 import express from 'express';
 import { Project } from '../models/ProjectModel.js';
+import updateProjectOnTimeElapse from '../projectUtils.js';
 const router = express.Router();
 
 // Get all archived projects & route order precedence
@@ -123,55 +124,34 @@ router.put('/:id/pause', async (req, res) => {
       return res.status(404).json({ message: 'Project not found' });
     }
 
-    if (project.regularStart) {
-      // Convert regularStart string to a Date object
-      const regularStartDate = new Date(project.regularStart);
-
-      // Calculate hours between regularStart and current time
-      const currentTime = new Date();
-
-      const elapsedTimeInMilliseconds = currentTime.getTime() - regularStartDate.getTime();
-      const elapsedTimeInHours = elapsedTimeInMilliseconds / (1000 * 60 * 60);
-
-      // Save the original hoursTaken
-      let currentHoursTaken = project.hoursTaken;
-
-      // Parse hoursTaken to a float, add elapsed time, and convert back to a string
-      const updatedHoursTaken = (parseFloat(project.hoursTaken) + elapsedTimeInHours).toString();
-
-      // Update project data
-      currentHoursTaken = project.hoursTaken = updatedHoursTaken;
-      project.regularStart = null;
-      project.regularEnd = null;
-
-      // Save the updated project
-      await project.save();
-
-      // Include the elapsed time in seconds and current hoursTaken in the response
-      const elapsedTimeInSeconds = Math.round(elapsedTimeInMilliseconds / 1000);
-      const currentHoursTakenInSeconds = Math.round(currentHoursTaken * 3600);
-      let currentTimeTaken = '';
-
-      if (currentHoursTakenInSeconds < 60) {
-        currentTimeTaken = (currentHoursTaken * 3600).toFixed(2) + ' sec';
-      } else if (currentHoursTakenInSeconds > 60) {
-        currentTimeTaken = (currentHoursTaken * 60).toFixed(2) + ' min';
-      } else if (currentHoursTakenInSeconds > 3600) {
-        currentTimeTaken = (currentHoursTaken / 60).toFixed(2) + ' hrs';
-      }
-      return res.status(200).json({
-        project,
-        elapsedTimeInSeconds: `${elapsedTimeInSeconds} sec`,
-        currentHoursTaken: currentTimeTaken
-      });
-    }
-
-    return res.status(200).json({ message: "Project is already paused" });
+    const response = await updateProjectOnTimeElapse(project, reqType = 'pause');
+    return res.status(200).json({
+      project,
+      ...response
+    });
   } catch (error) {
     return res.status(500).send({ message: error.message });
   }
 });
 
+// Get the latest project status
+router.get('/:id/latest', async (req, res) => {
+  try {
+    const project = await Project.findById(req.params.id);
+    if (!project) {
+      return res.status(404).json({ message: 'Project not found' });
+    }
+
+    const response = await updateProjectOnTimeElapse(project, reqType = 'latest');
+
+    return res.status(200).json({
+      project,
+      ...response
+    });
+  } catch (error) {
+    return res.status(500).send({ message: error.message });
+  }
+});
 
 // Finish a project and archive it
 router.put('/:id/finish', async (req, res) => {
