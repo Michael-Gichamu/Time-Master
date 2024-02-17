@@ -20,10 +20,11 @@ router.get('/archived', async (req, res) => {
 router.get('/', async (req, res) => {
   try {
     const projects = await Project.find();
-    return res.status(200).json({
-      count: projects.length,
-      data: projects,
-    });
+    // const response = await updateProjectOnTimeElapse(project, 'latest');
+    const formattedProjects = projects.map(project => ({
+      ...project.toObject()
+    }));
+    return res.status(200).json(formattedProjects);
   } catch (error) {
     return res.status(500).send({ message: error.message });
   }
