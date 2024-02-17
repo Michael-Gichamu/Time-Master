@@ -40,6 +40,7 @@ const updateProjectOnTimeElapse = async (project, reqType) => {
     }
 
     return {
+      project,
       elapsedTimeInSeconds: `${elapsedTimeInSeconds} sec`,
       currentHoursTaken: currentTimeTaken
     };

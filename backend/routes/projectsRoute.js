@@ -124,9 +124,8 @@ router.put('/:id/pause', async (req, res) => {
       return res.status(404).json({ message: 'Project not found' });
     }
 
-    const response = await updateProjectOnTimeElapse(project, reqType = 'pause');
+    const response = await updateProjectOnTimeElapse(project, 'pause');
     return res.status(200).json({
-      project,
       ...response
     });
   } catch (error) {
@@ -142,10 +141,9 @@ router.get('/:id/latest', async (req, res) => {
       return res.status(404).json({ message: 'Project not found' });
     }
 
-    const response = await updateProjectOnTimeElapse(project, reqType = 'latest');
+    const response = await updateProjectOnTimeElapse(project, 'latest');
 
     return res.status(200).json({
-      project,
       ...response
     });
   } catch (error) {
