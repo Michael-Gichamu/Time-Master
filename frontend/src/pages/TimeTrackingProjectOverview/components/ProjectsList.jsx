@@ -1,17 +1,25 @@
 import { React, useState} from 'react'
 import { Projects } from "../../../constants";
-import { faPlay, faPause, faStop, faPenToSquare, faTrash } from '@fortawesome/free-solid-svg-icons';import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlay, faPause, faStop, faPenToSquare, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-const ProjectsList = () => {
+const ProjectsList = ({
+  projects,
+  onStartClick,
+  onPauseClick,
+  onStopClick,
+  onUpdateClick,
+  onDeleteClick,
+  onLatestProject,
+}) => {
   const [isToggled, setIsToggled] = useState(true);
-
   const handleToggle = () => {
     setIsToggled(!isToggled);
   }
-
+  
   return (
     <div>
-      {Projects.map((project, index) => (
+      {projects.map((project, index) => (
         <div key={index} className="custom-black rounded-md my-3 py-5 px-3">
           <div className="flex justify-between">
             <p>{project.title}</p>
@@ -32,15 +40,16 @@ const ProjectsList = () => {
             </div>
             <div className="flex justify-between mt-3 w-1/6 *:w-1/4 text-[#9DCBEF]">
               <button onClick={() => onStartClick(project._id)}>
-                <button onClick={ handleToggle }>
-                  <FontAwesomeIcon icon={ isToggled? faPlay: faPause }/>
+                <button onClick={handleToggle}>
+                  <FontAwesomeIcon icon={isToggled ? faPlay : faPause} />
                 </button>
               </button>
-              <button onClick={() => onStopClick(project._id)}><FontAwesomeIcon icon={ faStop }/></button>
-              <button onClick={() => onUpdateClick(project._id, { title: 'Updated Title' })}><FontAwesomeIcon icon={ faPenToSquare }/></button>
-              <button onClick={() => onDeleteClick(project._id)}><FontAwesomeIcon icon={ faTrash }/></button>
-            </div>
+              <button onClick={() => onStopClick(project._id)}><FontAwesomeIcon icon={faStop} /></button>
+              <button onClick={() => onUpdateClick(project._id, { title: 'Updated Title' })}><FontAwesomeIcon icon={faPenToSquare} /></button>
+              <button onClick={() => onDeleteClick(project._id)}><FontAwesomeIcon icon={faTrash} /></button>
+              <button onClick={() => onLatestProject(project._id)}>Fetch Latest</button>
           </div>
+        </div>
         </div>
       ))}
     </div>

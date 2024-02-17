@@ -37,6 +37,12 @@ export const pauseProject = async (projectId) => {
   return response.data;
 }
 
+// retrieve updates on time elapsed and hours taken for a project
+export const latestProject = async (projectId) => {
+  const response = await axios.get(`${BaseUrl}/projects/${projectId}/latest`);
+  return response.data;
+}
+
 // Sets that a project is finished and is archived
 export const finishProject = async (projectId) => {
   const response = await axios.put(`${BaseUrl}/projects/${projectId}/finish`);
