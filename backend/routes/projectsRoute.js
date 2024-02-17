@@ -1,6 +1,7 @@
 import express from 'express';
 import { Project } from '../models/ProjectModel.js';
 import updateProjectOnTimeElapse from '../projectUtils.js';
+import { getCurrentTimeTaken } from '../projectUtils.js';
 const router = express.Router();
 
 // Get all archived projects & route order precedence
@@ -22,6 +23,7 @@ router.get('/', async (req, res) => {
     const projects = await Project.find();
     // const response = await updateProjectOnTimeElapse(project, 'latest');
     const formattedProjects = projects.map(project => ({
+      hoursTaken: getCurrentTimeTaken(project.hoursTaken),
       ...project.toObject()
     }));
     return res.status(200).json(formattedProjects);
@@ -66,6 +68,7 @@ router.put('/:id', async (req, res) => {
       req.params.id,
       {
         title: req.body.title,
+        hoursTaken: req.body.hoursTaken,
         completionStatus: req.body.completionStatus
       },
       { new: true }

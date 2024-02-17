@@ -19,6 +19,9 @@ const ProjectSchema = new mongoose.Schema({
   regularStart: {
     type: Date,
   },
+  regularLatest: {
+    type: Date,
+  },
   regularEnd: {
     type: Date,
   },
