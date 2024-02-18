@@ -47,10 +47,10 @@ const updateProjectOnTimeElapse = async (project, reqType) => {
       currentHoursTaken: getCurrentTimeTaken(currentHoursTaken)
     };
   } else {
-    return { 
-      project,
+    return {
       message: "Project is already paused",
-      currentHoursTaken: getCurrentTimeTaken(project.hoursTaken)
+      currentHoursTaken: getCurrentTimeTaken(project.hoursTaken).currentTimeTaken,
+      project
     };
   }
 };

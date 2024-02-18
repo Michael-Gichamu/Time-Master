@@ -8,10 +8,11 @@ const router = express.Router();
 router.get('/archived', async (req, res) => {
   try {
     const archivedProjects = await Project.find({ isFinished: true });
-    return res.status(200).json({
-      count: archivedProjects.length,
-      data: archivedProjects,
-    });
+    const formattedProjects = archivedProjects.map(project => ({
+      hoursTakenStdFormat: getCurrentTimeTaken(project.hoursTaken).currentTimeTaken,
+      ...project.toObject()
+    }));
+    return res.status(200).json(formattedProjects);
   } catch (error) {
     return res.status(500).send({ message: error.message });
   }
@@ -25,7 +26,6 @@ router.get('/', async (req, res) => {
       hoursTakenStdFormat: getCurrentTimeTaken(project.hoursTaken).currentTimeTaken,
       ...project.toObject()
     }));
-    console.log(formattedProjects);
     return res.status(200).json(formattedProjects);
   } catch (error) {
     return res.status(500).send({ message: error.message });
@@ -69,7 +69,8 @@ router.put('/:id', async (req, res) => {
       {
         title: req.body.title,
         hoursTaken: req.body.hoursTaken,
-        completionStatus: req.body.completionStatus
+        completionStatus: req.body.completionStatus,
+        isFinished: req.body.isFinished
       },
       { new: true }
     );
