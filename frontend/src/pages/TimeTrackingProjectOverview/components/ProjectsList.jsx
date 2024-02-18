@@ -1,4 +1,4 @@
-import { React, useState} from 'react'
+import { React, useState, useEffect} from 'react'
 import { Projects } from "../../../constants";
 import { faPlay, faPause, faStop, faPenToSquare, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -12,23 +12,52 @@ const ProjectsList = ({
   onDeleteClick,
   onLatestProject,
 }) => {
-  const [isToggled, setIsToggled] = useState(true);
-  const handleToggle = () => {
-    setIsToggled(!isToggled);
-  }
-  
+  const [isPlaying, setIsPlaying] = useState(true);
+ 
+  const handlePlayPauseClick = (projectId) => {
+    if (isPlaying) {
+      onStartClick(projectId);
+    } else {
+      onPauseClick(projectId);    
+    }
+    setIsPlaying(!isPlaying);
+  };
+
+  // Function to call onLatestProject every 30 seconds
+  const startLatestProjectInterval = () => {
+    return setInterval(() => {
+      // Call onLatestProject here
+      projects.forEach((project) => {
+        onLatestProject(project._id);
+      });
+    }, 1000); // 30 seconds interval
+  };
+
+  useEffect(() => {
+    // Start the interval only when isPlaying is false
+    let intervalId;
+    if (!isPlaying) {
+      intervalId = startLatestProjectInterval();
+    }
+
+    // Clear the interval when the component unmounts
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [isPlaying, projects, onLatestProject]);
+
   return (
     <div>
       {projects.map((project, index) => (
         <div key={index} className="custom-black rounded-md my-3 py-5 px-3">
           <div className="flex justify-between">
             <p>{project.title}</p>
-            <p>{`${project.hoursTaken}hrs`}</p>
+            <p>{`${project.hoursTakenStdFormat}`}</p>
           </div>
           <div className='flex justify-between items-center'>
             <div className="group relative custom-blue mt-3 w-1/3 h-2 rounded-md flex items-center cursor-pointer">
               <div className="custom-green h-1.5 mx-0.5 rounded-md"
-                style={{ width: `${project.completionStatus}%` }}></div>
+                style={{ width: `${project.completionStatus}` }}></div>
               <div
                 className="custom-darkgray absolute left-full top-1/2 z-20 ml-3 -translate-y-1/2 whitespace-nowrap rounded-[5px] py-1 px-3.5 text-sm text-white opacity-0 group-hover:opacity-100"
                 >
@@ -39,15 +68,13 @@ const ProjectsList = ({
               </div>
             </div>
             <div className="flex justify-between mt-3 w-1/6 *:w-1/4 text-[#9DCBEF]">
-              <button onClick={() => onStartClick(project._id)}>
-                <button onClick={handleToggle}>
-                  <FontAwesomeIcon icon={isToggled ? faPlay : faPause} />
-                </button>
+              <button onClick={() => handlePlayPauseClick(project._id)}>
+                <FontAwesomeIcon icon={isPlaying ? faPlay : faPause } />
               </button>
               <button onClick={() => onStopClick(project._id)}><FontAwesomeIcon icon={faStop} /></button>
               <button onClick={() => onUpdateClick(project._id, { title: 'Updated Title' })}><FontAwesomeIcon icon={faPenToSquare} /></button>
               <button onClick={() => onDeleteClick(project._id)}><FontAwesomeIcon icon={faTrash} /></button>
-              <button onClick={() => onLatestProject(project._id)}>Fetch Latest</button>
+              {/* <button onClick={() => onLatestProject(project._id)}>Fetch Latest</button> */}
           </div>
         </div>
         </div>
