@@ -68,7 +68,6 @@ const getCurrentTimeTaken = (currentHoursTaken) => {
     currentTimeTaken = (currentHoursTakenInSeconds / 3600).toFixed(2) + ' hrs';
   }
 
-  console.log(currentTimeTaken);
   return {currentTimeTaken: currentTimeTaken, currentHoursTaken: currentHoursTaken};
 };
 
