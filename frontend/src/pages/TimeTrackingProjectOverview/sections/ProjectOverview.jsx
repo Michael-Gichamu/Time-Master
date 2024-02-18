@@ -8,16 +8,17 @@ import ProjectsList from "../components/ProjectsList";
 import { faBoxArchive, faRotateRight, faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ProjectModal from "../components/ProjectModal";
+import { useSnackbar } from "notistack";
 
 const ProjectOverview = () => {
-  const [
-    cumulativeCompletionStatus, setCumulativeCompletionStatus] = useState(0);
+  const [cumulativeCompletionStatus, setCumulativeCompletionStatus] = useState(0);
   const [activeProjects, setActiveProjects] = useState([]);
   const [projects, setProjects] = useState([]);
   // const [newProjectTitle, setNewProjectTitle] = useState('');
   const [isCreateModalOpen, setCreateModalOpen] = useState(false);
   const [error, setError] = useState(null);
   const [archivedMode, setArchivedMode] = useState(false);
+  const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -26,15 +27,31 @@ const ProjectOverview = () => {
         if (archivedMode) {
           const archivedProjectsData = await getarchivedProjects();
           setProjects(archivedProjectsData);
-          setArchivedMode(true); // Set archived mode to true after fetching archived projects
+          if (archivedProjectsData && archivedProjectsData.length > 0) {
+            enqueueSnackbar("Archived projects fetched successfully.", { variant: "success" });
+          } else {
+            enqueueSnackbar("No archived projects found.", { variant: "warning" });
+            setTimeout(() => {
+              setArchivedMode(false);
+            }, 100);
+          }
+          
         } else {
           projectsData = await getProjects();
           setProjects(projectsData);
         }
-        const totalCompletion = projectsData.reduce((acc, project) => acc + project.completionStatus, 0);
-        setCumulativeCompletionStatus(totalCompletion / 2);
+        if (projectsData && projectsData.length > 0) {
+          const totalCompletion = projectsData.reduce((acc, project) => acc + project.completionStatus, 0);
+          setCumulativeCompletionStatus(totalCompletion / 2);
+          enqueueSnackbar("Active projects fetched successfully.", { variant: "success" });
+        } else {
+          setCumulativeCompletionStatus(0);
+          if (!archivedMode) {
+            enqueueSnackbar("No active projects found.", { variant: "warning" });
+          }
+        } 
       } catch (error) {
-        setError("Error fetching projects. Please try again.");
+        enqueueSnackbar(`Error fetching projects. ${error} Please try again.`, { variant: "error" });
       }
     };
 
@@ -47,10 +64,10 @@ const ProjectOverview = () => {
         await createProject({ title: newTitle, hoursTaken: '0', completionStatus: 0 });
         const projectsData = await getProjects();
         setProjects(projectsData);
-        setNewProjectTitle('');
+        enqueueSnackbar("Project created successfully.", { variant: "success" });
       }
     } catch (error) {
-      setError("Error creating project. Please try again.");
+      enqueueSnackbar(`Error creating project. ${error} Please try again.`, { variant: "error" });
     }
   };
 
@@ -66,8 +83,9 @@ const ProjectOverview = () => {
       await updateProject(projectId, projectData);
       const projectsData = await getProjects();
       setProjects(projectsData);
+      enqueueSnackbar("Project updated successfully.", { variant: "success" });
     } catch (error) {
-      setError("Error updating project. Please try again.");
+      enqueueSnackbar("Error updating project. Please try again.", { variant: "error" });
     }
   };
 
@@ -76,9 +94,11 @@ const ProjectOverview = () => {
       await deleteProject(projectId);
       const projectsData = await getProjects();
       setProjects(projectsData);
+      const archivedProjectsData = await getarchivedProjects();
       if (archivedMode && archivedProjectsData.length === 0) {
         setArchivedMode(false);
       }
+      enqueueSnackbar("Project deleted successfully.", { variant: "success" });
     } catch (error) {
       setError("Error deleting project. Please try again.");
     }
@@ -87,16 +107,17 @@ const ProjectOverview = () => {
   const handleStartClick = async (projectId) => {
     try {
       if (activeProjects.includes(projectId)) {
-        setError("Project already started.");
+        enqueueSnackbar("Project already started.", { variant: "info" });
       } else {
         const updatedActiveProjects = [...activeProjects, projectId];
         setActiveProjects(updatedActiveProjects);
         await startProject(projectId);
         const projectsData = await getProjects();
         setProjects(projectsData);
+        enqueueSnackbar("Project started successfully.", { variant: "success" });
       }
     } catch (error) {
-      setError("Error starting project. Please try again.");
+      enqueueSnackbar("Error starting project. Please try again.", { variant: "error" });
     }
   };
 
@@ -107,8 +128,9 @@ const ProjectOverview = () => {
       setProjects(projectsData);
       // Remove the paused project from activeProjects
       setActiveProjects(activeProjects.filter(id => id !== projectId));
+      enqueueSnackbar("Project paused successfully.", { variant: "success" });
     } catch (error) {
-      setError("Error pausing project. Please try again.");
+      enqueueSnackbar("Error pausing project. Please try again.", { variant: "error" });
     }
   };
 
@@ -117,23 +139,23 @@ const ProjectOverview = () => {
       await latestProject(projectId);
       const projectsData = await getProjects();
       setProjects(projectsData);
+      enqueueSnackbar("Project updated successfully.", { variant: "success" });
     } catch (error) {
-      setError("Error fetching latest project data. Please try again.");
+      enqueueSnackbar("Error updating project. Please try again.", { variant: "error" });
     }
   };
 
   const handleStopClick = async (projectId) => {
     try {
-      if (activeProjects.includes(projectId)) {
-        await finishProject(projectId);
-        const projectsData = await getProjects();
-        setProjects(projectsData);
-        
-        // Remove the stopped project from activeProjects
-        setActiveProjects(activeProjects.filter(id => id !== projectId));
-      }
+      await finishProject(projectId);
+      const projectsData = await getProjects();
+      setProjects(projectsData);
+      
+      // Remove the stopped project from activeProjects
+      setActiveProjects(activeProjects.filter(id => id !== projectId));
+      enqueueSnackbar("Project stopped successfully.", { variant: "success" });
     } catch (error) {
-      setError("Error stopping project. Please try again.");
+      enqueueSnackbar("Error stopping project. Please try again.", { variant: "error" });
     }
   };
 
