@@ -1,7 +1,8 @@
 import { React, useState, useEffect} from 'react'
-import { Projects } from "../../../constants";
+// import { Projects } from "../../../constants";
 import { faPlay, faPause, faStop, faPenToSquare, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import ProjectModal from './ProjectModal';
 
 const ProjectsList = ({
   projects,
@@ -11,16 +12,28 @@ const ProjectsList = ({
   onUpdateClick,
   onDeleteClick,
   onLatestProject,
+  archivedMode
 }) => {
   const [isPlaying, setIsPlaying] = useState(true);
- 
+  const [selectedProject, setSelectedProject] = useState(null);
+  const [isUpdateModalOpen, setUpdateModalOpen] = useState(false);
+  const [playingState, setPlayingState] = useState({});
+
+
   const handlePlayPauseClick = (projectId) => {
-    if (isPlaying) {
-      onStartClick(projectId);
+    const isCurrentlyPlaying = playingState[projectId] || false;
+
+    if (isCurrentlyPlaying) {
+      onPauseClick(projectId);
     } else {
-      onPauseClick(projectId);    
+      onStartClick(projectId);
     }
-    setIsPlaying(!isPlaying);
+  
+    // Update the playing state for the clicked project
+    setPlayingState((prevState) => ({
+      ...prevState,
+      [projectId]: !isCurrentlyPlaying,
+    }));
   };
 
   // Function to call onLatestProject every 30 seconds
@@ -31,6 +44,20 @@ const ProjectsList = ({
         onLatestProject(project._id);
       });
     }, 1000); // 30 seconds interval
+  };
+
+  const handleUpdateClick = (project) => {
+    // Set the selected project for updating
+    setSelectedProject(project);
+    // Open the update modal
+    setUpdateModalOpen(true);
+  };
+  
+  const handleUpdateTitle = (newTitle) => {
+    // Call the onUpdateClick function with the selected project ID and the new title
+    onUpdateClick(selectedProject._id, { title: newTitle });
+    // Close the modal
+    setUpdateModalOpen(false);
   };
 
   useEffect(() => {
@@ -48,6 +75,12 @@ const ProjectsList = ({
 
   return (
     <div>
+      <ProjectModal
+        isOpen={isUpdateModalOpen}
+        onClose={() => setUpdateModalOpen(false)}
+        onUpdate={handleUpdateTitle}
+        mode="update"
+      />
       {projects.map((project, index) => (
         <div key={index} className="custom-black rounded-md my-3 py-5 px-3">
           <div className="flex justify-between">
@@ -68,13 +101,21 @@ const ProjectsList = ({
               </div>
             </div>
             <div className="flex justify-between mt-3 w-1/6 *:w-1/4 text-[#9DCBEF]">
-              <button onClick={() => handlePlayPauseClick(project._id)}>
-                <FontAwesomeIcon icon={isPlaying ? faPlay : faPause } />
-              </button>
-              <button onClick={() => onStopClick(project._id)}><FontAwesomeIcon icon={faStop} /></button>
-              <button onClick={() => onUpdateClick(project._id, { title: 'Updated Title' })}><FontAwesomeIcon icon={faPenToSquare} /></button>
-              <button onClick={() => onDeleteClick(project._id)}><FontAwesomeIcon icon={faTrash} /></button>
-              {/* <button onClick={() => onLatestProject(project._id)}>Fetch Latest</button> */}
+              {archivedMode ? (
+                <button onClick={() => onDeleteClick(project._id)}><FontAwesomeIcon icon={faTrash} className='bg-yellow-950 flex-1'/></button>
+              ): (
+                <>
+                  <button onClick={() => handlePlayPauseClick(project._id)}>
+                    <FontAwesomeIcon icon={playingState[project._id] ? faPause : faPlay} />
+                  </button>
+                  <button onClick={() => onStopClick(project._id)}><FontAwesomeIcon icon={faStop} /></button><button onClick={() => handleUpdateClick(project)}>
+                    <FontAwesomeIcon icon={faPenToSquare} />
+                  </button>
+                  <button onClick={() => onDeleteClick(project._id)}>
+                    <FontAwesomeIcon icon={faTrash} />
+                  </button>
+                </>
+              )}
           </div>
         </div>
         </div>

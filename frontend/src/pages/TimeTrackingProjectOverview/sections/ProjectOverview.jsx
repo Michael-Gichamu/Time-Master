@@ -2,25 +2,35 @@
 
 import React, { useState, useEffect } from "react";
 import Dashboard from "../components/Dashboard";
-import { getProjects, createProject, updateProject, deleteProject, startProject, pauseProject, finishProject, latestProject } from '../../../api';
+import { getProjects, createProject, updateProject, deleteProject, startProject, pauseProject, finishProject, latestProject, getarchivedProjects } from '../../../api';
 import DoughnutChart from "../components/DoughnutChart";
 import ProjectsList from "../components/ProjectsList";
-import { faBoxArchive } from "@fortawesome/free-solid-svg-icons";
+import { faBoxArchive, faRotateRight, faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import ProjectModal from "../components/ProjectModal";
 
 const ProjectOverview = () => {
   const [
     cumulativeCompletionStatus, setCumulativeCompletionStatus] = useState(0);
   const [activeProjects, setActiveProjects] = useState([]);
   const [projects, setProjects] = useState([]);
-  const [newProjectTitle, setNewProjectTitle] = useState('');
+  // const [newProjectTitle, setNewProjectTitle] = useState('');
+  const [isCreateModalOpen, setCreateModalOpen] = useState(false);
   const [error, setError] = useState(null);
+  const [archivedMode, setArchivedMode] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const projectsData = await getProjects();
-        setProjects(projectsData);
+        let projectsData;
+        if (archivedMode) {
+          const archivedProjectsData = await getarchivedProjects();
+          setProjects(archivedProjectsData);
+          setArchivedMode(true); // Set archived mode to true after fetching archived projects
+        } else {
+          projectsData = await getProjects();
+          setProjects(projectsData);
+        }
         const totalCompletion = projectsData.reduce((acc, project) => acc + project.completionStatus, 0);
         setCumulativeCompletionStatus(totalCompletion / 2);
       } catch (error) {
@@ -29,12 +39,12 @@ const ProjectOverview = () => {
     };
 
     fetchData();
-  }, []);
+  }, [archivedMode]);
 
-  const handleCreateProject = async () => {
+  const onCreateProject = async (newTitle) => {
     try {
-      if (newProjectTitle) {
-        await createProject({ title: newProjectTitle, hoursTaken: '0', completionStatus: 0 });
+      if (newTitle) {
+        await createProject({ title: newTitle, hoursTaken: '0', completionStatus: 0 });
         const projectsData = await getProjects();
         setProjects(projectsData);
         setNewProjectTitle('');
@@ -42,6 +52,13 @@ const ProjectOverview = () => {
     } catch (error) {
       setError("Error creating project. Please try again.");
     }
+  };
+
+  const handleCreateProject = (newTitle) => {
+    // Call the onCreateProject function with the new title 
+    onCreateProject(newTitle);
+    // Close the modal
+    setCreateModalOpen(false);
   };
 
   const handleUpdateProject = async (projectId, projectData) => {
@@ -59,6 +76,9 @@ const ProjectOverview = () => {
       await deleteProject(projectId);
       const projectsData = await getProjects();
       setProjects(projectsData);
+      if (archivedMode && archivedProjectsData.length === 0) {
+        setArchivedMode(false);
+      }
     } catch (error) {
       setError("Error deleting project. Please try again.");
     }
@@ -66,11 +86,15 @@ const ProjectOverview = () => {
 
   const handleStartClick = async (projectId) => {
     try {
-      const updatedActiveProjects = [...activeProjects, projectId];
-      setActiveProjects(updatedActiveProjects);
-      await startProject(projectId);
-      const projectsData = await getProjects();
-      setProjects(projectsData);
+      if (activeProjects.includes(projectId)) {
+        setError("Project already started.");
+      } else {
+        const updatedActiveProjects = [...activeProjects, projectId];
+        setActiveProjects(updatedActiveProjects);
+        await startProject(projectId);
+        const projectsData = await getProjects();
+        setProjects(projectsData);
+      }
     } catch (error) {
       setError("Error starting project. Please try again.");
     }
@@ -81,6 +105,8 @@ const ProjectOverview = () => {
       await pauseProject(projectId);
       const projectsData = await getProjects();
       setProjects(projectsData);
+      // Remove the paused project from activeProjects
+      setActiveProjects(activeProjects.filter(id => id !== projectId));
     } catch (error) {
       setError("Error pausing project. Please try again.");
     }
@@ -111,6 +137,27 @@ const ProjectOverview = () => {
     }
   };
 
+  const handleToggleClick = () => {
+    if (archivedMode) {
+      // If currently in archived mode, switch to active mode
+      setArchivedMode(false);
+    } else {
+      // If currently in active mode, switch to archived mode
+      setArchivedMode(true);
+    }
+  };
+
+  // const handleArchiveClick = async () => {
+  //   try {
+  //     // Call getArchivedProjects to fetch archived projects
+  //     const archivedProjectsData = await getarchivedProjects();
+  //     setProjects(archivedProjectsData);
+  //     setArchivedMode(true); // Set archived mode to true
+  //   } catch (error) {
+  //     setError("Error fetching archived projects. Please try again.");
+  //   }
+  // };
+
   return (
     <div className="my-14">
       <h1 className="font-bold text-center">Project Overview</h1>
@@ -123,18 +170,27 @@ const ProjectOverview = () => {
             <div className="custom-gray basis-3/4 px-6 pt-4">
               <div className="flex justify-between items-center pr-2">
                 <p className="font-bold">Active Projects: {activeProjects.length}</p>
-                <FontAwesomeIcon icon={faBoxArchive} className="text-[#9DCBEF]" />
+                <div className="*:p-2 mt-1 *:hover:cursor-pointer">
+                  <FontAwesomeIcon icon={faCirclePlus} className="text-[#9DCBEF] mr-1" onClick={() => { setCreateModalOpen(true); }} />
+                   <FontAwesomeIcon icon={archivedMode ? faRotateRight : faBoxArchive} className="text-[#9DCBEF]" onClick={handleToggleClick}/>
+                </div>
               </div>
               <div className="h-5/6 overflow-auto scrollbar-thin scrollbar-thumb-[#1F1F1F] scrollbar-track-[#101010] p-2">
+                <ProjectModal
+                  isOpen={isCreateModalOpen}
+                  onClose={() => setCreateModalOpen(false)}
+                  onUpdate={handleCreateProject}
+                  mode="create"
+                />
                 <ProjectsList
                   projects={projects}
-                  onCreateProject={handleCreateProject}
                   onUpdateClick={handleUpdateProject}
                   onDeleteClick={handleDeleteProject}
                   onStartClick={handleStartClick}
                   onPauseClick={handlePauseClick}
                   onLatestProject={handleLatestProject}
                   onStopClick={handleStopClick}
+                  archivedMode={archivedMode}
                 />
               </div>
             </div>

@@ -10,7 +10,9 @@ export const createProject = async (projectData) => {
 // Retrieves all the projects from the server
 export const getProjects = async () => {
   const response = await axios.get(`${BaseUrl}/projects`);
-  return response.data;
+  const projectsData = response.data;
+  const activeProjectsData = projectsData.filter(project => !project.isFinished);
+  return activeProjectsData;
 };
 
 // Update a project
