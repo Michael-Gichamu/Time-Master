@@ -20,19 +20,19 @@ const ProjectsList = ({
   const [playingState, setPlayingState] = useState({});
 
 
-  const handlePlayPauseClick = (projectId) => {
-    const isCurrentlyPlaying = playingState[projectId] || false;
+  const handlePlayPauseClick = (project) => {
+    const isCurrentlyPlaying = project.regularStart || false;
 
     if (isCurrentlyPlaying) {
-      onPauseClick(projectId);
+      onPauseClick(project._id);
     } else {
-      onStartClick(projectId);
+      onStartClick(project._id);
     }
   
     // Update the playing state for the clicked project
     setPlayingState((prevState) => ({
       ...prevState,
-      [projectId]: !isCurrentlyPlaying,
+      [project._id]: !isCurrentlyPlaying,
     }));
   };
 
@@ -43,7 +43,7 @@ const ProjectsList = ({
       projects.forEach((project) => {
         onLatestProject(project._id);
       });
-    }, 1000); // 30 seconds interval
+    }, 1000); // 1 seconds interval
   };
 
   const handleUpdateClick = (project) => {
@@ -65,13 +65,14 @@ const ProjectsList = ({
     let intervalId;
     if (!isPlaying) {
       intervalId = startLatestProjectInterval();
+    } else {
+      // Clear the interval when the component unmounts
+      return () => {
+        clearInterval(intervalId);
+      };
     }
-
-    // Clear the interval when the component unmounts
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, [isPlaying, projects, onLatestProject]);
+    console.log('Latest Works')
+  }, [isPlaying, projects]);
 
   return (
     <div>
@@ -105,8 +106,8 @@ const ProjectsList = ({
                 <button onClick={() => onDeleteClick(project._id)}><FontAwesomeIcon icon={faTrash} className='bg-yellow-950 flex-1'/></button>
               ): (
                 <>
-                  <button onClick={() => handlePlayPauseClick(project._id)}>
-                    <FontAwesomeIcon icon={playingState[project._id] ? faPause : faPlay} />
+                  <button onClick={() => handlePlayPauseClick(project)}>
+                    <FontAwesomeIcon icon={project.regularStart ? faPause : faPlay} />
                   </button>
                   <button onClick={() => onStopClick(project._id)}><FontAwesomeIcon icon={faStop} /></button><button onClick={() => handleUpdateClick(project)}>
                     <FontAwesomeIcon icon={faPenToSquare} />
