@@ -52,6 +52,9 @@ router.post('/', async (req, res) => {
       title: req.body.title,
       hoursTaken: '0',
       completionStatus: 0,
+      regularStart: null,
+      regularEnd: null,
+      regularLatest: null,
     });
 
     const savedProject = await newProject.save();
