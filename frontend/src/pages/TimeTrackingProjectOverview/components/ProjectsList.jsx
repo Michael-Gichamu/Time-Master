@@ -48,15 +48,16 @@ const ProjectsList = ({
     });
   };
 
-  // Function to call onLatestProject every 1 seconds
+  // Function to call onLatestProject every 5 minute
   const startLatestProjectInterval = () => {
     return setInterval(() => {
       // Call onLatestProject here
-      console.log('Calling onLatestProject for all projects');
       projects.forEach((project) => {
-        onLatestProject(project._id);
+        if (project.regularStart !== null && project.regularEnd === null) {
+          onLatestProject(project._id);
+        }
       });
-    }, 1000); // 1 seconds interval
+    }, 300000); // 5 minutes interval
   };
 
   const handleUpdateClick = (project) => {

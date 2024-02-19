@@ -24,7 +24,6 @@ const updateProjectOnTimeElapse = async (project, reqType) => {
       } else {
         elapsedTimeInMilliseconds = currentTime.getTime() - regularLatestDate;
         project.regularLatest = currentTime;
-        console.log(elapsedTimeInMilliseconds + 'ms2');
       }
     }
 
