@@ -14,32 +14,45 @@ const ProjectsList = ({
   onLatestProject,
   archivedMode
 }) => {
-  const [isPlaying, setIsPlaying] = useState(true);
+  const [projectStatus, setProjectStatus] = useState({});
+  // const [isPlaying, setIsPlaying] = useState(true);
   const [selectedProject, setSelectedProject] = useState(null);
   const [isUpdateModalOpen, setUpdateModalOpen] = useState(false);
-  const [playingState, setPlayingState] = useState({});
 
+  const determineInitialStatus = (project) => {
+    // If project.regularStart is null, consider the project as paused
+    return project.regularStart !== null;
+  };
+
+  useEffect(() => {
+    // Initialize projectStatus based on project.regularStart
+    const initialStatus = {};
+    projects.forEach((project) => {
+      initialStatus[project._id] = determineInitialStatus(project);
+    });
+    setProjectStatus(initialStatus);
+  }, [projects]);
 
   const handlePlayPauseClick = (project) => {
-    const isCurrentlyPlaying = project.regularStart || false;
+    const isProjectPlaying = projectStatus[project._id];
 
-    if (isCurrentlyPlaying) {
+    if (isProjectPlaying) {
       onPauseClick(project._id);
     } else {
       onStartClick(project._id);
     }
-  
-    // Update the playing state for the clicked project
-    setPlayingState((prevState) => ({
-      ...prevState,
-      [project._id]: !isCurrentlyPlaying,
-    }));
+
+    setProjectStatus({
+      ...projectStatus,
+      [project._id]: !isProjectPlaying,
+    });
   };
 
-  // Function to call onLatestProject every 30 seconds
+  // Function to call onLatestProject every 1 seconds
   const startLatestProjectInterval = () => {
     return setInterval(() => {
       // Call onLatestProject here
+      console.log('Calling onLatestProject for all projects');
       projects.forEach((project) => {
         onLatestProject(project._id);
       });
@@ -61,18 +74,17 @@ const ProjectsList = ({
   };
 
   useEffect(() => {
-    // Start the interval only when isPlaying is false
     let intervalId;
-    if (!isPlaying) {
+
+    if (!projectStatus[selectedProject?._id]) {
       intervalId = startLatestProjectInterval();
-    } else {
-      // Clear the interval when the component unmounts
-      return () => {
-        clearInterval(intervalId);
-      };
     }
-    console.log('Latest Works')
-  }, [isPlaying, projects]);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [projectStatus, selectedProject, projects, onLatestProject]);
+
 
   return (
     <div>
@@ -107,7 +119,7 @@ const ProjectsList = ({
               ): (
                 <>
                   <button onClick={() => handlePlayPauseClick(project)}>
-                    <FontAwesomeIcon icon={project.regularStart ? faPause : faPlay} />
+                    <FontAwesomeIcon icon={projectStatus[project._id] ? faPause : faPlay} />
                   </button>
                   <button onClick={() => onStopClick(project._id)}><FontAwesomeIcon icon={faStop} /></button><button onClick={() => handleUpdateClick(project)}>
                     <FontAwesomeIcon icon={faPenToSquare} />
