@@ -13,3 +13,6 @@ npm install --save-dev @iconify/react
 
 # Install http client library axios
 npm install axios
+
+// Install notistack
+npm install notistack
